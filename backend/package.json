@@ -25,6 +25,7 @@
     "mysql": "^2.18.1",
     "nocache": "^3.0.1",
     "node-sass": "^4.14.1",
+    "nodemon": "^2.0.12",
     "password-validator": "^5.1.1",
     "path": "^0.12.7",
     "sequelize": "^6.6.5"
