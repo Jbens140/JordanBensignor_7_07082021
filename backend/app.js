@@ -4,22 +4,23 @@ const nocache = require("nocache"); //Désactive la mise en cache du navigateur
 const helmet = require("helmet");// il sécurise nos requêtes HTTP
 const cors = require('cors'); // cors: manage cross-origin resource sharing
 const path = require('path'); // Plugin qui sert dans l'upload des images et permet de travailler avec les répertoires et chemin de fichier
+const auth = require("./middleware/auth")
 
 
-// On importe la route dédiée aux sauces
-const saucesRoutes = require('./routes/Sauces');
+
 // On importe la route dédiée aux utilisateurs
-const userRoutes = require('./routes/User');
+const authRoutes = require("./routes/auth")
+// On importe la route dédiée aux utilisateurs
+const userRoutes = require("./routes/user")
+// On importe la route dédiée aux utilisateurs
+const messageRoutes = require("./routes/message")
+// On importe la route dédiée aux utilisateurs
+const commentRoutes = require("./routes/comment")
 
 require("dotenv").config();
 
-mongoose.connect(process.env.URL_MONGO, {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+//db
+const { sequelize } = require('./models/index');
 
 // L'application utilise le framework express
   const app = express();
@@ -52,21 +53,25 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.use(cors()); // CORS - partage de ressources entre serveurs
+
 // On utilise une méthode body-parser pour la transformation du corps de la requête en JSON.
 
 // Transforme les données arrivant de la requête POST en un objet JSON.
 app.use(bodyParser.json())
 
-// On utilise helmet pour plusieurs raisons notamment la mise en place du X-XSS-Protection afin d'activer le filtre de script intersites(XSS) dans les navigateurs web
-app.use(helmet());
 
-//Désactive la mise en cache du navigateur
-app.use(nocache());
+const db = require("./models")
+db.sequelize.sync()
 
-// Va servir les routes dédiées aux sauces
-app.use('/api/Sauces', saucesRoutes);
-
+// Va servir les routes dédiées aux auth
+app.use("/api/auth", authRoutes)
 // Va servir les routes dédiées aux utilisateurs
-app.use('/api/auth', userRoutes);
+app.use("/api/users", auth, userRoutes)
+// Va servir les routes dédiées aux messages / posts
+app.use("/api/messages", auth, messageRoutes)
+// Va servir les routes dédiées aux commentaires
+app.use("/api/comments", auth, commentRoutes)
 
-module.exports = app;
+module.exports = app
+

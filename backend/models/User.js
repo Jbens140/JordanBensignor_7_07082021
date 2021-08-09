@@ -1,33 +1,41 @@
+// Création d'un model user sequelize
+const { Model } = require("sequelize")
 
-// Création d'un model user avec mongoose, on importe donc mongoose
-const mongoose = require('mongoose');
-
-
-const uniqueValidator = require('mongoose-unique-validator');
-const sanitizerPlugin = require('mongoose-sanitizer-plugin');
-
-const userSchema = mongoose.Schema({
-
-    // L'email doit être unique
-
-    email: {
-        type: String,
-        unique: true,
-        required: [true, "Veuillez entrer votre adresse email"],
-        // match: [/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, "Veuillez entrer une adresse email correcte"]
-    },
-
-    // enregistrement du mot de pass 
-    password: {
-        type: String,
-        required: [true, "Veuillez choisir un mot de passe"]
-    }
-});
-
-// Plugin pour garantir un email unique
-userSchema.plugin(uniqueValidator);
-// Plugin pour Mongoose qui purifie les champs du model avant de les enregistrer dans la base MongoDB.
-userSchema.plugin(sanitizerPlugin);
-
-// On exporte ce schéma sous forme de modèle : le modèle s'appellera user et on lui passe le shéma de données
-module.exports = mongoose.model('User', userSchema);
+module.exports = (sequelize, DataTypes) => {
+    class User extends Model {}
+    User.init({
+        userName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        avatar: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: "http://127.0.0.1:3000/images/avatars/default_user.jpg"
+        },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
+        isActive: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
+        }
+    }, 
+    {
+        sequelize,
+        modelName: "User"
+    })
+    return User
+}
