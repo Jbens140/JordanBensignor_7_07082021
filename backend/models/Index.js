@@ -1,12 +1,20 @@
-const fs = require("fs")
-const path = require("path")
-const Sequelize = require("sequelize")
-const basename = path.basename(__filename)
-require("dotenv").config({ path: process.cwd() + "/.env" })
-const db = {}
+// module de connexion à la base de données
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-    host: process.env.DB_HOST, dialect: "mysql", port: process.env.DB_PORT })
+require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
+const Sequelize = require("sequelize");
+const basename = path.basename(__filename);
+
+const db = {};
+
+const sequelize = new Sequelize(
+        process.env.DB_NAME, 
+        process.env.DB_USER, 
+        process.env.DB_PASS, {
+            host: process.env.DB_HOST, 
+            dialect: "mysql", 
+            port: process.env.DB_PORT })
 
 fs
     .readdirSync(__dirname)
@@ -27,15 +35,17 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
-db.users = require("./User.js")(sequelize, Sequelize)
-db.messages = require("./Message.js")(sequelize, Sequelize)
-db.comments = require("./Comment.js")(sequelize, Sequelize)
+db.users    = require("./user.js")(sequelize, Sequelize)
+db.messages = require("./message.js")(sequelize, Sequelize)
+db.comments = require("./comment.js")(sequelize, Sequelize)
 
-db.comments.belongsTo(db.messages)
-db.comments.belongsTo(db.users)
-db.messages.hasMany(db.comments)
-db.messages.belongsTo(db.users)
-db.users.hasMany(db.messages)
-db.users.hasMany(db.comments)
+db.messages .belongsTo(db.users)
+
+db.comments .belongsTo(db.users)
+db.comments .belongsTo(db.messages)
+db.comments .hasOne(db.comments);
+
+db.users    .hasMany(db.messages)
+db.users    .hasMany(db.comments)
 
 module.exports = db

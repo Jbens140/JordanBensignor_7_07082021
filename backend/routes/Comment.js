@@ -1,11 +1,14 @@
-const express = require("express")
-const router = express.Router()
-const commentCtrl = require("../controllers/Comment")
+const express = require("express");
+const router = express.Router();
+const commentCtrl = require("../controllers/commentsCtrl");
+const auth = require('../middleware/auth'); 
 
-router.get("/messages/:id", commentCtrl.findAllComments)
-router.get("/:id", commentCtrl.findOneComment)
-router.post("/", commentCtrl.createComment)
-router.put("/:id", commentCtrl.modifyComment)
-router.delete("/:id", commentCtrl.deleteComment)
+router.get("/",                commentCtrl .findAllComments);
 
-module.exports = router
+router.get("/:Messageid",      commentCtrl .findOneComment);
+
+router.post("/",         /*auth,*/      commentCtrl .createComment);
+
+router.delete("/",        /*auth,*/      commentCtrl .deleteComment);
+
+module.exports = router;

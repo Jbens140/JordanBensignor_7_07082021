@@ -1,13 +1,17 @@
-const express = require("express")
-const router = express.Router()
-const messageCtrl = require("../controllers/Message")
-const multer = require("../middleware/multer-config")
+const express       = require("express");
+const router        = express.Router();
+const auth          = require('../middleware/auth');  
+const messageCtrl   = require("../controllers/messagesCtrl");
+const multer        = require("../middleware/multer-config");
 
-router.get("/", messageCtrl.findAllMessages)
-router.get("/users/:id", messageCtrl.findAllMessagesForOne)
-router.get("/:id", messageCtrl.findOneMessage)
-router.post("/", multer, messageCtrl.createMessage)
-router.put("/:id", multer, messageCtrl.modifyMessage)
-router.delete("/:id", messageCtrl.deleteMessage)
+router.post("/",            /*auth,*/multer,    messageCtrl.createMessage);  // Post - Création des messages avec les images.
 
-module.exports = router
+router.get("/all/:id",                      messageCtrl.findAllMessagesForOne);
+
+router.get("/:id",                          messageCtrl.findOneMessage);
+
+router.get("/",                             messageCtrl.findAllMessages);
+
+router.delete("/",           /*auth,*/          messageCtrl.deleteMessage);
+
+module.exports = router;

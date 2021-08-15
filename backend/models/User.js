@@ -1,4 +1,5 @@
-// Création d'un model user sequelize
+// modele class USER pour la base de données.
+
 const { Model } = require("sequelize")
 
 module.exports = (sequelize, DataTypes) => {
@@ -17,20 +18,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        avatar: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "http://127.0.0.1:3000/images/avatars/default_user.jpg"
-        },
         isAdmin: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false
-        },
-        isActive: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true
         }
     }, 
     {

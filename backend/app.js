@@ -6,21 +6,20 @@ const cors = require('cors'); // cors: manage cross-origin resource sharing
 const path = require('path'); // Plugin qui sert dans l'upload des images et permet de travailler avec les répertoires et chemin de fichier
 const auth = require("./middleware/auth")
 
+const dataBase      = require("./models");
 
 
 // On importe la route dédiée aux utilisateurs
-const authRoutes = require("./routes/auth")
-// On importe la route dédiée aux utilisateurs
-const userRoutes = require("./routes/user")
-// On importe la route dédiée aux utilisateurs
+const userRoutes = require('./routes/user');
+// On importe la route dédiée aux autentification
+const authRoutes    = require("./routes/auth")
+// On importe la route dédiée aux m
 const messageRoutes = require("./routes/message")
 // On importe la route dédiée aux utilisateurs
 const commentRoutes = require("./routes/comment")
 
 require("dotenv").config();
 
-//db
-const { sequelize } = require('./models/index');
 
 // L'application utilise le framework express
   const app = express();
@@ -61,17 +60,24 @@ app.use(cors()); // CORS - partage de ressources entre serveurs
 app.use(bodyParser.json())
 
 
-const db = require("./models")
-db.sequelize.sync()
+dataBase.sequelize.sync()   // Synchronisation de la base de données grâce à Sequelize
+.then(() => {
+  console.log("Connection à la base de données msql réussi.");
+})
+.catch((err) => {
+  console.error("Impossible de se connecté à la base de donnée:", err);
+});
 
-// Va servir les routes dédiées aux auth
-app.use("/api/auth", authRoutes)
+
 // Va servir les routes dédiées aux utilisateurs
-app.use("/api/users", auth, userRoutes)
-// Va servir les routes dédiées aux messages / posts
-app.use("/api/messages", auth, messageRoutes)
+app.use("/api/users", userRoutes);
+// Va servir les routes dédiées aux messages
+app.use("/api/messages", messageRoutes);
 // Va servir les routes dédiées aux commentaires
-app.use("/api/comments", auth, commentRoutes)
+app.use("/api/comments", commentRoutes);
+
+
+
 
 module.exports = app
 
