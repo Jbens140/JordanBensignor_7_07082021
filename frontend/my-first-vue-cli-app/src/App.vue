@@ -1,26 +1,28 @@
+
+<!-- fichier central de l'qpplication Vue.-->
+
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div id="app">
+      <NavHeader></NavHeader>
+      <router-view></router-view>
+      <Footer></Footer>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import NavHeader from "./components/NavHeader"
+import Footer from "./components/Footer"
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    name: "App",
+    components: { 
+        NavHeader,
+        Footer
+    }
 }
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style>
+  body {
+      background-color: #091F43
+  }
 </style>

@@ -7,6 +7,7 @@ const jwt       = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {   
   if ( !req.body.userName || !req.body.email || !req.body.password ) {
+    console.log(req.body)
     return res.status(400).json({message: "one ore more paramaters empty"})
 }
     const nameRegex = /(.*[a-z]){3,30}/;
@@ -49,21 +50,21 @@ exports.login = (req, res, next) => {
   .then(user => {
     if (!user) {  
       return res.status(404).json({ message: 'email not found' }); 
-    }
-    bcrypt.compare(req.body.password, user.password)        
+    } console.log(user.get('password'))
+    bcrypt.compare(req.body.password, user.get('password'))       
     .then(valid => {    
       if (!valid) {                                             
         return res.status(401).json({ message: "mot de passe non valide" });           
       } 
       res.status(200).json({
         message:    "Connexion réussie",
-        userId:     user.id,
-        role:       user.isAdmin,
-        userName :  user.userName,
+        userId:     user.get('id'),
+        role:       user.get('isAdmin'),
+        userName :   user.get('userName'),
         token: jwt.sign( { userId: user.id }, process.env.TKN_SECRET, { expiresIn: '24h' } )
       })
     })
-    .catch(error => res.status(500).json({ error }));                             
+    .catch(error => console.log(error));                             
     })
   .catch(error => res.status(500).json({ error }));                                 
 };

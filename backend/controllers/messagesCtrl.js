@@ -117,3 +117,15 @@ exports.deleteMessage = (req, res, next) => {
         res.status(401).json({message : " unauthorized "})
     }
 }
+exports.modifyMessage = (req, res, next) => {
+        console.log(req.body);
+        let imagePost = "";
+        if (req.file) { 
+            imagePost = `${req.protocol}://${req.get("host")}/images/${req.file.filename}` 
+        }
+        Message.update({message: req.body.message, messageUrl: imagePost},
+            {where: { id: req.params.messageId }})
+            .then(() => res.status(201).json({ message: "Publication modifiée" }))
+            .catch(error => console.log(error))
+    
+    };

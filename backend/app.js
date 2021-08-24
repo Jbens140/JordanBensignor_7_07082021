@@ -59,6 +59,12 @@ app.use(cors()); // CORS - partage de ressources entre serveurs
 // Transforme les données arrivant de la requête POST en un objet JSON.
 app.use(bodyParser.json())
 
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded());
+
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
 
 dataBase.sequelize.sync()   // Synchronisation de la base de données grâce à Sequelize
 .then(() => {
@@ -75,6 +81,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 // Va servir les routes dédiées aux commentaires
 app.use("/api/comments", commentRoutes);
+// Va servir les routes dédiées aux utilisateurs
+app.use("/api/auth", authRoutes);
 
 
 
